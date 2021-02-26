@@ -25,6 +25,7 @@ public class Server {
     String databaseName = System.getenv().getOrDefault("MONGO_DB", "dev");
 
     // Setup the MongoDB client object with the information we set earlier
+    @SuppressWarnings("all")
     MongoClient mongoClient
       = MongoClients.create(MongoClientSettings
         .builder()
