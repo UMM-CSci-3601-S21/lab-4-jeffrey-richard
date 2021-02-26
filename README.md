@@ -15,8 +15,8 @@
 [![Client Build Status](../../actions/workflows/client.yaml/badge.svg)](../../actions/workflows/client.yaml)
 [![End to End Build Status](../../actions/workflows/e2e.yaml/badge.svg)](../../actions/workflows/e2e.yaml)
 
-[![BCH compliance](https://bettercodehub.com/edge/badge/UMM-CSci-3601-S21/lab4-jeffrey-richard?branch=main)](https://bettercodehub.com/)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/UMM-CSci-3601-S21/lab4-jeffrey-richard.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/UMM-CSci-3601-S21/lab4-jeffrey-richard/alerts/)
+[![BCH compliance](https://bettercodehub.com/edge/badge/UMM-CSci-3601-S21/lab-4-jeffrey-richard?branch=main)](https://bettercodehub.com/)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/UMM-CSci-3601-S21/lab-4-jeffrey-richard.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/UMM-CSci-3601-S21/lab-4-jeffrey-richard/alerts/)
 
 - [Setup](#setup)
   - [Make sure you have Mongo running on your computer](#make-sure-you-have-mongo-running-on-your-computer)
