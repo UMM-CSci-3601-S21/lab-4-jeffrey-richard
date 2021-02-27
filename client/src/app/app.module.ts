@@ -32,6 +32,10 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { UserCardComponent } from './users/user-card.component';
 import { UserProfileComponent } from './users/user-profile.component';
 import { AddUserComponent } from './users/add-user.component';
+import { TodoListComponent } from './todos/todo-list/todo-list.component'; //possible issue
+import { TodoCardComponent } from './todos/todo-card/todo-card.component';
+import { TodoProfileComponent } from './todos/todo-profile/todo-profile.component';
+import { AddTodoComponent } from './todos/add-todo/add-todo.component';
 
 const MATERIAL_MODULES: any[] = [
   MatListModule,
@@ -60,6 +64,10 @@ const MATERIAL_MODULES: any[] = [
     UserCardComponent,
     UserProfileComponent,
     AddUserComponent,
+    TodoListComponent,
+    TodoCardComponent,
+    AddTodoComponent,
+    TodoProfileComponent,
   ],
   imports: [
     BrowserModule,
