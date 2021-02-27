@@ -1,1 +1,52 @@
-<p>todo-list works!</p>
+<mat-card class="search-card">
+  <mat-card-title class="todo-list-title">Todos</mat-card-title>
+  <mat-card-content fxLayout="column">
+
+    <div fxLayout="row wrap" fxLayoutGap="10px">
+      <!-- Examples of filtering in Angular -->
+
+      <mat-form-field class="input-field">
+        <mat-label>Owner</mat-label>
+        <input matInput data-test="ownerInput" placeholder="Filter by owner"
+        [(ngModel)]="owner" (input)="getTodosFromServer()">
+        <mat-hint>Filtered on server</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="input-field">
+        <mat-label>Category</mat-label>
+        <input matInput data-test="categoryInput" placeholder="Filter by category"
+        [(ngModel)]="todoCategory" (input)="updateFilter()">
+        <mat-hint>Filtered on client</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="input-field">
+        <mat-label>Body</mat-label>
+        <input matInput data-test="bodyInput" placeholder="Filter by body"
+        [(ngModel)]="todoBody" (input)="updateFilter()">
+        <mat-hint>Filtered on client</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="input-field">
+        <mat-label>Status</mat-label>
+        <mat-select (selectionChange)="getTodosFromServer()" [(ngModel)]="todoStatus" data-test="todoStatusSelect">
+          <mat-option>--</mat-option>
+          <mat-option value="true">Complete</mat-option>
+          <mat-option value="false">Incomplete</mat-option>
+        </mat-select>
+        <mat-hint>Filtered on server</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="input-field">
+        <mat-label>Limit</mat-label>
+        <input matInput data-test="limitInput" type="number" placeholder="Filter by limit"
+        min="0" (max)="getSize()" [(ngModel)]="limit" (input)="updateFilter()">
+        <mat-hint>Filtered on client</mat-hint>
+      </mat-form-field>
+
+      </div>
+  </mat-card-content>
+  </mat-card>
+
+  <div class="test-output" *ngFor="let todo of this.filteredTodos">
+    {{ todo.owner }}
+  </div>
