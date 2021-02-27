@@ -39,14 +39,14 @@
       <mat-form-field class="input-field">
         <mat-label>Limit</mat-label>
         <input matInput data-test="limitInput" type="number" placeholder="Filter by limit"
-        min="0" (max)="getSize()" [(ngModel)]="limit" (input)="updateFilter()">
+        min="0" (max)="this.filteredTodos.length" [(ngModel)]="limit" (input)="updateFilter()">
         <mat-hint>Filtered on client</mat-hint>
       </mat-form-field>
-
+    <div class="test-output" *ngFor="let todo of this.filteredTodos">
+      {{ todo.owner }}
+    </div>
       </div>
   </mat-card-content>
   </mat-card>
 
-  <div class="test-output" *ngFor="let todo of this.filteredTodos">
-    {{ todo.owner }}
-  </div>
+

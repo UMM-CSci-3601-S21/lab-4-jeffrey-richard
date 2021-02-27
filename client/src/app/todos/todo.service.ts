@@ -13,7 +13,6 @@ export class TodoService {
 
   constructor(private httpClient: HttpClient) { }
 
-  // Why is status not able to be passed as a boolean?
   getTodos(filters?: { owner?: string; status?: string }): Observable<Todo[]> {
     let httpParams: HttpParams = new HttpParams();
     if(filters) {

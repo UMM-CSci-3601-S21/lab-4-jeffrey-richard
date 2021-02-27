@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Todo } from '../todo';
 import { TodoService } from '../todo.service';
 
@@ -9,7 +9,8 @@ import { TodoService } from '../todo.service';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.scss']
 })
-export class TodoListComponent implements OnInit {
+
+export class TodoListComponent implements OnInit, OnDestroy {
 
   public serverFilteredTodos: Todo[];
   public filteredTodos: Todo[];
@@ -19,25 +20,41 @@ export class TodoListComponent implements OnInit {
   public todoBody: string;
   public todoCategory: string;
   public limit: number;
+  getTodosSub: Subscription;
 
-  constructor(private todoService: TodoService, private matSnack: MatSnackBar) { }
-
-  ngOnInit(): void {
-  }
+  constructor(private todoService: TodoService) { }
 
   // The method we use to filter on the server side
-  getTodosFromServer() {
-
+  getTodosFromServer(): void {
+    this.unsub();
+    this.getTodosSub = this.todoService.getTodos({
+      status: this.todoStatus.toString(),
+      owner: this.owner
+    }).subscribe(returnedTodos => {
+      this.serverFilteredTodos = returnedTodos;
+      this.updateFilter();
+    }, err => {
+      console.log(err);
+    });
   }
 
   // The method we use to filter on the client side
   updateFilter(){
-
+    this.filteredTodos = this.todoService.filterTodos(
+      this.serverFilteredTodos, { category: this.todoCategory, body: this.todoBody, limit: this.limit });
   }
 
-  // Returns the maximum size of todos (size of database)
-  getSize(): number {
-    return 1000;
+  ngOnInit(): void {
+    this.getTodosFromServer();
   }
 
+  ngOnDestroy(): void {
+    this.unsub();
+  }
+
+  unsub(): void {
+    if(this.getTodosSub) {
+      this.getTodosSub.unsubscribe();
+    }
+  }
 }
