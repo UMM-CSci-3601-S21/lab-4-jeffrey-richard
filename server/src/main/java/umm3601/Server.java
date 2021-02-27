@@ -10,7 +10,7 @@ import com.mongodb.client.MongoDatabase;
 
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
-
+import umm3601.todo.TodoController;
 import umm3601.user.UserController;
 
 public class Server {
@@ -25,7 +25,7 @@ public class Server {
     String databaseName = System.getenv().getOrDefault("MONGO_DB", "dev");
 
     // Setup the MongoDB client object with the information we set earlier
-    @SuppressWarnings("all")
+    //@SuppressWarnings("all")
     MongoClient mongoClient
       = MongoClients.create(MongoClientSettings
         .builder()
@@ -37,6 +37,7 @@ public class Server {
 
     // Initialize dependencies
     UserController userController = new UserController(database);
+    TodoController todoController = new TodoController(database);
 
     Javalin server = Javalin.create(config -> {
       config.registerPlugin(new RouteOverviewPlugin("/api"));
@@ -58,18 +59,24 @@ public class Server {
 
     server.start(4567);
 
-    // List users, filtered using query parameters
+    // List users or todo, filtered using query parameters
     server.get("/api/users", userController::getUsers);
+    server.get("/api/todos", todoController::getTodos);
 
-    // Get the specified user
+    // Get the specified user or todo
     server.get("/api/users/:id", userController::getUser);
+    server.get("/api/todos/:id", todoController::getTodo);
 
-    // Delete the specified user
+
+    // Delete the specified user and todo
     server.delete("/api/users/:id", userController::deleteUser);
+    server.delete("/api/todos/:id", todoController::deleteTodo);
 
-    // Add new user with the user info being in the JSON body
+    // Add new user or todo with the user info being in the JSON body
     // of the HTTP request
     server.post("/api/users", userController::addNewUser);
+    server.post("/api/todos", todoController::addNewTodo);
+
 
     server.exception(Exception.class, (e, ctx) -> {
       ctx.status(500);
