@@ -30,6 +30,7 @@ public class TodoController {
   private static final String OWNER_KEY = "owner";
   private static final String CATEGORY_KEY = "category";
   private static final String STATUS_KEY = "status";
+  private static final String BODY_KEY = "body";
 
 
   private final JacksonMongoCollection<Todo> todoCollection;
@@ -67,8 +68,8 @@ public class TodoController {
     List<Bson> filters = new ArrayList<>(); // start with a blank document
 
     if (ctx.queryParamMap().containsKey(STATUS_KEY)) {
-        int targetAge = ctx.queryParam(STATUS_KEY, Integer.class).get();
-        filters.add(eq(STATUS_KEY, targetAge));
+        boolean targetStatus = ctx.queryParam(STATUS_KEY, Boolean.class).get();
+        filters.add(eq(STATUS_KEY, targetStatus));
     }
 
     if (ctx.queryParamMap().containsKey(CATEGORY_KEY)) {
@@ -76,10 +77,15 @@ public class TodoController {
     }
 
     if (ctx.queryParamMap().containsKey(OWNER_KEY)) {
-      filters.add(eq(OWNER_KEY, ctx.queryParam(OWNER_KEY)));
+      filters.add(regex(OWNER_KEY,  Pattern.quote(ctx.queryParam(OWNER_KEY)), "i"));
     }
 
-    String sortBy = ctx.queryParam("sortby", "name"); //Sort by sort query param, default is name
+    if (ctx.queryParamMap().containsKey(BODY_KEY)) {
+      filters.add(regex(BODY_KEY,  Pattern.quote(ctx.queryParam(BODY_KEY)), "i"));
+    }
+
+
+    String sortBy = ctx.queryParam("sortby", OWNER_KEY); //Sort by sort query param, default is name
     String sortOrder = ctx.queryParam("sortorder", "asc");
 
     ctx.json(todoCollection.find(filters.isEmpty() ? new Document() : and(filters))
@@ -90,10 +96,10 @@ public class TodoController {
 
   public void addNewTodo(Context ctx) {
     Todo newTodo = ctx.bodyValidator(Todo.class)
-      .check(todo -> todo.owner != null && todo.owner.length() > 0) //Verify that the user has a name that is not blank
-      .check(todo -> todo.category != null && todo.category.length() > 0)// Verify that the provided email is a valid email
-      .check(todo -> todo.body != null && todo.body.length() > 0) // Verify that the provided age is > 0
-      .check(todo -> todo.status == (true || false)) // Verify that the role is one of the valid roles
+      .check(todo -> todo.owner != null && todo.owner.length() > 0)
+      .check(todo -> todo.category != null && todo.category.length() > 0)
+      .check(todo -> todo.body != null && todo.body.length() > 0)
+      .check(todo -> todo.status == (true || false))
       .get();
 
 
