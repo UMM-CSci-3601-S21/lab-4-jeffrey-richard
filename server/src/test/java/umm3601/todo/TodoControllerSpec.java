@@ -117,20 +117,19 @@ public class TodoControllerSpec {
     mongoClient.close();
   }
 
-  //@Test
-
-  //public void GetAllTodos() throws IOException {
+  @Test
+  public void GetAllTodos() throws IOException {
 
     // Create our fake Javalin context
-  //  Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
-  //  todoController.getTodos(ctx);
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+    todoController.getTodos(ctx);
 
 
-  //  assertEquals(200, mockRes.getStatus());
+    assertEquals(200, mockRes.getStatus());
 
-  //  String result = ctx.resultString();
-  //  assertEquals(db.getCollection("todo").countDocuments(), JavalinJson.fromJson(result, Todo[].class).length);
-  //}
+    String result = ctx.resultString();
+    assertEquals(db.getCollection("todos").countDocuments(), JavalinJson.fromJson(result, Todo[].class).length);
+  }
 
 
 }

@@ -66,7 +66,7 @@ describe('TodoService', () => {
 
     describe('Calling getTodos() with parameters with http requests', () => {
       it('calls api/todos with the filter parameter "true"', () => {
-      service.getTodos({ status: 'true' }).subscribe(
+      service.getTodos({ status: true }).subscribe(
         todos => expect(todos).toBe(testTodos)
       );
 
