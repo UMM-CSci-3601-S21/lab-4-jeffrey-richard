@@ -37,6 +37,18 @@
       </mat-form-field>
 
       <mat-form-field class="input-field">
+        <mat-label>Order by</mat-label>
+        <mat-select>
+          <mat-option>--</mat-option>
+          <mat-option value="category">Category</mat-option>
+          <mat-option value="status">Status</mat-option>
+          <mat-option value="body">Body</mat-option>
+          <mat-option value="owner">Owner</mat-option>
+        </mat-select>
+        <mat-hint>Order by category</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="input-field">
         <mat-label>Limit</mat-label>
         <input matInput data-test="limitInput" type="number" placeholder="Filter by limit"
         min="0" (max)="this.filteredTodos.length" [(ngModel)]="limit" (input)="updateFilter()">
@@ -46,8 +58,10 @@
   </mat-card-content>
   </mat-card>
 
-  <div class="test-output" *ngFor="let todo of this.filteredTodos">
-    {{ todo.owner }}
+  <div class="right">
+    <div class="todoList">
+      <app-todo-card *ngFor="let todo of filteredTodos" [todo]="todo"></app-todo-card>
+    </div>
   </div>
 
 
