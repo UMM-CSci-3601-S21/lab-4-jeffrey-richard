@@ -93,7 +93,7 @@ public class TodoControllerSpec {
       new Document()
         .append("owner", "Joe")
         .append("status", false)
-        .append("category", "fishing")
+        .append("category", "groceries")
         .append("body", "Hi, I am Joe"));
 
     samsId = new ObjectId();
@@ -124,12 +124,169 @@ public class TodoControllerSpec {
     Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
     todoController.getTodos(ctx);
 
+    assertEquals(200, mockRes.getStatus());
 
     assertEquals(200, mockRes.getStatus());
 
     String result = ctx.resultString();
     assertEquals(db.getCollection("todos").countDocuments(), JavalinJson.fromJson(result, Todo[].class).length);
   }
+
+
+  @Test
+  public void GetTodosByOwner() throws IOException {
+
+    // Set the query string to test with
+    mockReq.setQueryString("owner=Chris");
+
+    // Create our fake Javalin context
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+
+    todoController.getTodos(ctx);
+
+    assertEquals(200, mockRes.getStatus()); // The response status should be 200
+
+    String result = ctx.resultString();
+    Todo[] resultTodos = JavalinJson.fromJson(result, Todo[].class);
+
+    assertEquals(1, resultTodos.length); // There should be two todos returned
+    for (Todo todo : resultTodos) {
+      assertEquals("Chris", todo.owner); //
+    }
+  }
+
+  @Test
+  public void GetTodosByCategory() throws IOException {
+
+    mockReq.setQueryString("category=groceries");
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+    todoController.getTodos(ctx);
+
+    assertEquals(200, mockRes.getStatus());
+    String result = ctx.resultString();
+
+    Todo[] resultTodos = JavalinJson.fromJson(result, Todo[].class);
+
+    assertEquals(2, resultTodos.length); // There should be two todos returned
+    for (Todo todo : resultTodos) {
+      assertEquals("groceries", todo.category);
+    }
+  }
+
+  @Test
+  public void GetTodoWithExistentId() throws IOException {
+
+    String testID = samsId.toHexString();
+
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos/:id", ImmutableMap.of("id", testID));
+    todoController.getTodo(ctx);
+
+    assertEquals(200, mockRes.getStatus());
+
+    String result = ctx.resultString();
+    Todo resultTodo = JavalinJson.fromJson(result, Todo.class);
+
+    assertEquals(resultTodo._id, samsId.toHexString());
+    assertEquals(resultTodo.owner, "Sam");
+  }
+
+  @Test
+  public void GetTodoWithNonexistentId() throws IOException {
+
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos/:id", ImmutableMap.of("id", "58af3a600343927e48e87335"));
+
+    assertThrows(NotFoundResponse.class, () -> {
+      todoController.getTodo(ctx);
+    });
+  }
+
+  @Test
+  public void AddTodo() throws IOException {
+
+    String testNewTodo = "{"
+      + "\"owner\": \"Greg\","
+      + "\"status\": true,"
+      + "\"category\": \"gaming\","
+      + "\"body\": \"Greg is testing his code.\""
+      + "}";
+
+    mockReq.setBodyContent(testNewTodo);
+    mockReq.setMethod("POST");
+
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+
+    todoController.addNewTodo(ctx);
+
+    assertEquals(201, mockRes.getStatus());
+
+    String result = ctx.resultString();
+    String id = jsonMapper.readValue(result, ObjectNode.class).get("id").asText();
+    assertNotEquals("", id);
+    System.out.println(id);
+
+    assertEquals(1, db.getCollection("todos").countDocuments(eq("_id", new ObjectId(id))));
+
+    //verify todo was added to the database and the correct ID
+    Document addedTodo = db.getCollection("todos").find(eq("_id", new ObjectId(id))).first();
+    assertNotNull(addedTodo);
+    assertEquals("Greg", addedTodo.getString("owner"));
+    assertEquals(true, addedTodo.getBoolean("status"));
+    assertEquals("gaming", addedTodo.getString("category"));
+    assertEquals("Greg is testing his code.", addedTodo.getString("body"));
+  }
+
+
+  @Test
+  public void AddInvalidOwnerTodo() throws IOException {
+    String testNewTodo = "{"
+      + "\"status\": true,"
+      + "\"category\": \"groceries\","
+      + "\"body\": \"I am invalid.\","
+      + "}";
+    mockReq.setBodyContent(testNewTodo);
+    mockReq.setMethod("POST");
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+
+    assertThrows(BadRequestResponse.class, () -> {
+      todoController.addNewTodo(ctx);
+    });
+  }
+
+  public void AddInvalidStatusTodo() throws IOException {
+    String testNewTodo = "{"
+      + "\"status\": hamburger,"
+      + "\"category\": \"groceries\","
+      + "\"body\": \"I am invalid.\","
+      + "\"owner\": \"Barry.\","
+      + "}";
+    mockReq.setBodyContent(testNewTodo);
+    mockReq.setMethod("POST");
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+
+    assertThrows(BadRequestResponse.class, () -> {
+      todoController.addNewTodo(ctx);
+    });
+  }
+
+
+  @Test
+  public void DeleteTodo() throws IOException {
+
+    String testID = samsId.toHexString();
+
+    // User exists before deletion
+    assertEquals(1, db.getCollection("todos").countDocuments(eq("_id", new ObjectId(testID))));
+
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos/:id", ImmutableMap.of("id", testID));
+    todoController.deleteTodo(ctx);
+
+    assertEquals(200, mockRes.getStatus());
+
+    // User is no longer in the database
+    assertEquals(0, db.getCollection("todos").countDocuments(eq("_id", new ObjectId(testID))));
+  }
+
+
 
 
 }
