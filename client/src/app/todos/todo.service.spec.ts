@@ -170,5 +170,18 @@ describe('TodoService', () => {
         todo.body.indexOf(todoBody)).toBeGreaterThanOrEqual(0);
       });
     });
+
+    it('addTodo() posts the todo to api/todos', () => {
+      service.addTodo(testTodos[2]).subscribe(
+        id => expect(id).toBe('testID')
+      );
+
+      const req = httpTestingController.expectOne(service.todoUrl);
+
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual(testTodos[2]);
+
+      req.flush({ id: 'testID' });
+    });
   });
 });

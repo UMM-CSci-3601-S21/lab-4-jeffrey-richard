@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Todo } from './todo';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -49,5 +50,9 @@ export class TodoService {
       filteredTodos = filteredTodos.slice(0,filters.limit);
     }
     return filteredTodos;
+  }
+
+  addTodo(newTodo: Todo): Observable<string> {
+    return this.httpClient.post<{id: string}>(this.todoUrl, newTodo).pipe(map(res => res.id));
   }
 }
