@@ -54,7 +54,12 @@
         min="0" (max)="this.filteredTodos.length" [(ngModel)]="limit" (input)="updateFilter()">
         <mat-hint>Filtered on client</mat-hint>
       </mat-form-field>
-      </div>
+
+      <button mat-fab class="add-todo-button" matTooltip="Add Todo" matTooltipPosition="right" routerLink="/todos/new" data-test="addTodoButton">
+        <mat-icon class="md-24" aria-label="Add Todo">add</mat-icon>
+      </button>
+
+    </div>
   </mat-card-content>
 </mat-card>
 
