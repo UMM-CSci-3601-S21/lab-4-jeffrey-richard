@@ -33,6 +33,11 @@ export class AddTodoComponent implements OnInit {
       {type: 'required', message: 'A body is required'},
       {type: 'minlength', message: 'Body must be at least 1 character long'},
       {type: 'maxlength', message: 'Body cannot be more than 150 characters long'}
+    ],
+
+    status: [
+      {type: 'required', message: 'A status is required'},
+      {type: 'pattern', message: 'Status must be Complete or Incomplete'}
     ]
 
     // We chose to not ask for the status of the todo since it would be weird to add a completed todo
@@ -47,13 +52,6 @@ export class AddTodoComponent implements OnInit {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(50),
-        (fc) => {
-          if(fc.value.toLowerCase() === 'abc123' || fc.value.toLowerCase() === '123abc') {
-            return ({existingOwner: true});
-          } else {
-            return null;
-          }
-        },
       ])),
 
       category: new FormControl('', Validators.compose([
@@ -67,6 +65,11 @@ export class AddTodoComponent implements OnInit {
         Validators.minLength(1),
         Validators.maxLength(150)
       ])),
+
+      status: new FormControl(false, Validators.compose([
+        Validators.required,
+        Validators.pattern('^(true|false)$'),
+      ])),
     });
   }
 
@@ -76,7 +79,7 @@ export class AddTodoComponent implements OnInit {
 
   submitForm() {
     this.todoService.addTodo(this.addTodoForm.value).subscribe(newID => {
-      this.snackBar.open('Added Todo ' + this.addTodoForm.value.owner, null, {
+      this.snackBar.open('Added Todo Successfully', null, {
         duration: 2000,
       });
       this.router.navigate(['/todos/', newID]);
