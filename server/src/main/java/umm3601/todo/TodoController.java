@@ -97,7 +97,6 @@ public class TodoController {
       .check(todo -> todo.owner != null && todo.owner.length() > 0)
       .check(todo -> todo.category != null && todo.category.length() > 0)
       .check(todo -> todo.body != null && todo.body.length() > 0)
-      .check(todo -> todo.status == (true || false))
       .get();
 
 
