@@ -78,12 +78,21 @@ export class AddTodoComponent implements OnInit {
   }
 
   submitForm() {
-    this.todoService.addTodo(this.addTodoForm.value).subscribe(newID => {
+    console.log(this.addTodoForm.value);
+    const {owner,category,body,status} = this.addTodoForm.value;
+    this.todoService.addTodo({
+      _id:undefined,
+      owner,
+      status:status === 'true',
+      category,
+      body
+    }).subscribe(newID => {
       this.snackBar.open('Added Todo Successfully', null, {
         duration: 2000,
       });
       this.router.navigate(['/todos/', newID]);
     }, err => {
+      console.log(err);
       this.snackBar.open('Failed to add the todo', 'OK', {
         duration: 5000,
       });
