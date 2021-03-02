@@ -40,6 +40,18 @@
             </mat-error>
           </mat-form-field>
 
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select required formControlName="status">
+              <mat-option value=false>Incomplete</mat-option>
+              <mat-option value=true>Complete</mat-option>
+            </mat-select>
+            <mat-error *ngIf="addTodoForm.get('status').hasError('required')">You must make a selection</mat-error>
+            <mat-error *ngIf="addTodoForm.get('status').hasError('pattern') && !addTodoForm.get('status').hasError('required')">
+              Your selection is invalid
+            </mat-error>
+          </mat-form-field>
+
         </mat-card-content>
         <mat-card-actions align="end">
           <button

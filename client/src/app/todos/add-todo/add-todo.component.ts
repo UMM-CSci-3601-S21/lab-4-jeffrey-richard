@@ -33,6 +33,11 @@ export class AddTodoComponent implements OnInit {
       {type: 'required', message: 'A body is required'},
       {type: 'minlength', message: 'Body must be at least 1 character long'},
       {type: 'maxlength', message: 'Body cannot be more than 150 characters long'}
+    ],
+
+    status: [
+      {type: 'required', message: 'A status is required'},
+      {type: 'pattern', message: 'Status must be Complete or Incomplete'}
     ]
 
     // We chose to not ask for the status of the todo since it would be weird to add a completed todo
@@ -59,6 +64,11 @@ export class AddTodoComponent implements OnInit {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(150)
+      ])),
+
+      status: new FormControl(false, Validators.compose([
+        Validators.required,
+        Validators.pattern('^(true|false)$'),
       ])),
     });
   }
