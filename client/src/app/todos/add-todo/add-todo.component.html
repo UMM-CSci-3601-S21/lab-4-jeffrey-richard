@@ -33,7 +33,7 @@
             <mat-label>Body</mat-label>
             <input matInput placeholder="Body" formControlName="body">
             <mat-error *ngFor="let validation of addTodoValidationMessages.body">
-              <mat-error class="error-message" data-test="categoryError"
+              <mat-error class="error-message" data-test="bodyError"
                         *ngIf="addTodoForm.get('body').hasError(validation.type) && (addTodoForm.get('body').dirty || addTodoForm.get('body').touched)">
                 {{validation.message}}
               </mat-error>
@@ -60,7 +60,7 @@
             color="primary"
             [disabled]="!addTodoForm.valid"
             type="submit"
-            data-test="confirmAddUserButton"
+            data-test="confirmAddTodoButton"
           >
             ADD TODO
           </button>

@@ -66,7 +66,7 @@ export class AddTodoComponent implements OnInit {
         Validators.maxLength(150)
       ])),
 
-      status: new FormControl(false, Validators.compose([
+      status: new FormControl('false', Validators.compose([
         Validators.required,
         Validators.pattern('^(true|false)$'),
       ])),
@@ -77,6 +77,7 @@ export class AddTodoComponent implements OnInit {
     this.createForms();
   }
 
+  // This code will be tested in E2E tests
   submitForm() {
     console.log(this.addTodoForm.value);
     const {owner,category,body,status} = this.addTodoForm.value;
