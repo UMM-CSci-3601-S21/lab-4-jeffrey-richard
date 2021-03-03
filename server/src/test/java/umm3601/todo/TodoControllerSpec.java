@@ -174,6 +174,44 @@ public class TodoControllerSpec {
   }
 
   @Test
+
+  public void GetTodosByBody() throws IOException {
+
+    mockReq.setQueryString("body=Hi, I am Joe");
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+    todoController.getTodos(ctx);
+
+    assertEquals(200, mockRes.getStatus());
+    String result = ctx.resultString();
+
+    Todo[] resultTodos = JavalinJson.fromJson(result, Todo[].class);
+
+    assertEquals(1, resultTodos.length); // There should be one todos returned
+    for (Todo todo : resultTodos) {
+      assertEquals("Hi, I am Joe", todo.body);
+    }
+  }
+
+  @Test
+
+  public void GetTodosByStatus() throws IOException {
+
+    mockReq.setQueryString("status=false");
+    Context ctx = ContextUtil.init(mockReq, mockRes, "api/todos");
+    todoController.getTodos(ctx);
+
+    assertEquals(200, mockRes.getStatus());
+    String result = ctx.resultString();
+
+    Todo[] resultTodos = JavalinJson.fromJson(result, Todo[].class);
+
+    assertEquals(2, resultTodos.length); // There should be two todos returned
+    for (Todo todo : resultTodos) {
+      assertEquals(false, todo.status);
+    }
+  }
+
+  @Test
   public void GetTodoWithExistentId() throws IOException {
 
     String testID = samsId.toHexString();

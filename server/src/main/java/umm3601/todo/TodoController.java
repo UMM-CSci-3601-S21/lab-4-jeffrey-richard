@@ -60,7 +60,7 @@ public class TodoController {
 
 
 
-  //needs work
+
   public void getTodos(Context ctx) {
 
     List<Bson> filters = new ArrayList<>(); // start with a blank document
