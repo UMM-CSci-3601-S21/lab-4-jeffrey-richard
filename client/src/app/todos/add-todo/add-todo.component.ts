@@ -40,7 +40,6 @@ export class AddTodoComponent implements OnInit {
       {type: 'pattern', message: 'Status must be Complete or Incomplete'}
     ]
 
-    // We chose to not ask for the status of the todo since it would be weird to add a completed todo
   };
 
   constructor(private fb: FormBuilder, private todoService: TodoService, private snackBar: MatSnackBar, private router: Router) { }
