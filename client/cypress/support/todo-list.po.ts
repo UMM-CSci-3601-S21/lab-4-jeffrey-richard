@@ -20,7 +20,7 @@ export class TodoListPage {
   clickViewProfile(card: Cypress.Chainable<JQuery<HTMLElement>>) {
     return card.find<HTMLButtonElement>('[data-test=viewProfileButton]').click();
   }
-  selectRole(value: string) {
+  selectStatus(value: string) {
     return cy.get('[data-test=todoStatusSelect]').click().get(`mat-option[value="${value}"]`).click();
   }
 }
